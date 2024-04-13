@@ -1,4 +1,4 @@
-# pycallc - Example Python calling C/C++ code (with ctypes)
+# pycallc - Example Python call C/C++ (via ctypes)
 
 ## Basic Concept
 
@@ -90,10 +90,11 @@ Ref [example implementation](./src/cInterface.cpp)
 For linking
 
 * Compile as position independent code (e.g. -fPIC for gcc)
-  Ref compiler options in [top level CMakeLists.txt](./CMakeLists.txt)
+  Ref compiler options in [top level CMakeLists.txt](./CMakeLists.txt#L62)
+  in the BUILD_FLAGS_FOR_GCC variable.
 
 * Organize object code into a shared library (e.g. -shared for gcc)
-  Ref library options in [src/CMakeLists.txt](./src/CMakeLists.txt)
+  Ref library options in [src/CMakeLists.txt](./src/CMakeLists.txt#L37)
   which uses the cmake 'SHARED' keyword to build the library.
 
 ### Python Interface Code
@@ -201,7 +202,7 @@ Ref [example python code](./test/test_pycallc.py)
 
 This project can be built using [CMake](ihttps://cmake.org/). E.g.,
 
-	```###
+	```
 	$ cd /tmp
 	$ git clone https://github.com/Stellacore/pycallc.git
 	$ mkdir /tmp/tmpbuild # or anywhere
@@ -209,21 +210,19 @@ This project can be built using [CMake](ihttps://cmake.org/). E.g.,
 		&& cmake -DCMAKE_BUILD_TYPE=Release /tmp/pycallc/
 		&& cmake --build . --target all -j `nproc`
 		&& ctest
-	```###
+	```
 
 The shared library is located in
-	```###
+	```
 	/tmp/tmpbuild/src/libpycallc_clib.so
-	```###
+	```
 
 To run the python script directly from the build directory (which
 contains the
 
-	```###
+	```
 	$ cd /tmp/tmpbuild/test
 		&& bash -c \
 			"/usr/bin/python3 /tmp/tmpbuild/pycallc/test/test_pycallc.py"
-	```###
-
-
+	```
 
