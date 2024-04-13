@@ -114,6 +114,7 @@ the C function interfaces.
 	* In Python (Note the requirement of populating the \_fields\_ member
 	  with a list of named ctype types. E.g.,
 
+		```
 		# specify python class for which _fields_ member
 		# must match CCustomType declaration below
 		class CtCustomType(ct.Structure):
@@ -136,9 +137,11 @@ the C function interfaces.
 
 		# invoke c function from python
 		okay = pycopy(ct.byref(copy), source)
+		```
 
 	* In C or within extern "C"{} header section
 
+		```
 		// declare the custom type (must match CtCustomType._fields_ spec)
 		struct CCustomType
 		{
@@ -154,5 +157,5 @@ the C function interfaces.
 			( struct CCustomType * const ptInto
 			, struct CCustomType const from
 			);
-
+		```
 
