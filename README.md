@@ -24,6 +24,11 @@ Basic concepts are outlined in the following.
 
 ### Python Application Code
 
+The basic points are summarized in the following bullets. A detailed
+description is provided in section
+[Python Interface Code](#Python-Interface-Code)
+
+
 * Python code should import ctypes module e.g.
 
 	```
@@ -36,10 +41,20 @@ Basic concepts are outlined in the following.
     lib = ct.CDLL("path/libname.so")
 	```
 
-* Call functions per [Python Interface Code](#Python-Interface-Code)
-  section below.
+* Then specify details about each function to be used. This includes
+
+	* get python object for the function
+
+	* specify the function result return type (using ctype python objects)
+
+	* specify the function argument types (using ctype python objects)
 
 ### C/C++ Interface Code
+
+The C/C++ header files should be expressed using only C-langugage standards
+(which includes "#ifdef" logic which can contain non-C constructs).
+
+Ref [example interface](./include/pycallable.h)
 
 * Header files should be straight C - e.g. For compilation
 
@@ -58,7 +73,7 @@ Basic concepts are outlined in the following.
     {
 	#endif
 
-	... Header declarations using only C langague types!
+	// ... Header declarations using only C langague types!
 
 	#ifdef __cplusplus
     } // extern "C"
@@ -67,19 +82,26 @@ Basic concepts are outlined in the following.
 
 ### C/C++ Implementation Code
 
-* Function interfaces must be pure C code, but internal implementation
-  can freely use C++ (e.g. construct classes, call other C++ code, etc)
+Function interfaces must be pure C code, but internal implementation
+can freely use C++ (e.g. construct classes, call other C++ code, etc).
 
-* For linking
+Ref [example implementation](./src/cInterface.cpp)
 
-	* Compile as position independent code (e.g. -fPIC for gcc)
+For linking
 
-	* Organize object code into a shared library (e.g. -shared for gcc)
+* Compile as position independent code (e.g. -fPIC for gcc)
+  Ref compiler options in [top level CMakeLists.txt](./CMakeLists.txt)
+
+* Organize object code into a shared library (e.g. -shared for gcc)
+  Ref library options in [src/CMakeLists.txt](./src/CMakeLists.txt)
+  which uses the cmake 'SHARED' keyword to build the library.
 
 ### Python Interface Code
 
 Use the ctypes python module to describe the stack frame associated with
 the C function interfaces.
+
+Ref [example python code](./test/test_pycallc.py)
 
 * Construct a python object that represents the shared library. E.g.,
 
@@ -95,7 +117,6 @@ the C function interfaces.
 	```
 
 * Call the python function and use the results as is normal from within python.
-
 	```
    	resval = pyfunc(args)
 	print("resval:", resval)
@@ -120,7 +141,7 @@ the C function interfaces.
 		```
 
 
-* Ref ./test/test_pycallc.py
+* Ref the compilable/running [Example code](./test/test_pycallc.py)
 
 * Note there are
   [many ctypes](https://docs.python.org/3/library/ctypes.html#fundamental-data-types). These may be used individualy as illustrated above to describe
@@ -174,4 +195,35 @@ the C function interfaces.
 			, struct CCustomType const from
 			);
 		```
+
+	
+## Project Build and Test
+
+This project can be built using [CMake](ihttps://cmake.org/). E.g.,
+
+	```###
+	$ cd /tmp
+	$ git clone https://github.com/Stellacore/pycallc.git
+	$ mkdir /tmp/tmpbuild # or anywhere
+	$ cd /tmp/tmpbuild
+		&& cmake -DCMAKE_BUILD_TYPE=Release /tmp/pycallc/
+		&& cmake --build . --target all -j `nproc`
+		&& ctest
+	```###
+
+The shared library is located in
+	```###
+	/tmp/tmpbuild/src/libpycallc_clib.so
+	```###
+
+To run the python script directly from the build directory (which
+contains the
+
+	```###
+	$ cd /tmp/tmpbuild/test
+		&& bash -c \
+			"/usr/bin/python3 /tmp/tmpbuild/pycallc/test/test_pycallc.py"
+	```###
+
+
 
