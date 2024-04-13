@@ -200,7 +200,9 @@ Ref [example python code](./test/test_pycallc.py)
 	
 ## Project Build and Test
 
-This project can be built using [CMake](ihttps://cmake.org/). E.g.,
+Build and test is vanilla cmake paradigm:
+
+* This project can be built using [CMake](ihttps://cmake.org/). E.g.,
 
 	```
 	$ cd /tmp
@@ -212,13 +214,14 @@ This project can be built using [CMake](ihttps://cmake.org/). E.g.,
 		&& ctest
 	```
 
-The shared library is located in
+* The shared library is located in
+
 	```
 	/tmp/tmpbuild/src/libpycallc_clib.so
 	```
 
-To run the python script directly from the build directory (which
-contains the
+* To run the python script directly from the build directory (which
+  contains the
 
 	```
 	$ cd /tmp/tmpbuild/test
