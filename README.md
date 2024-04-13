@@ -26,11 +26,15 @@ Basic concepts are outlined in the following.
 
 * Python code should import ctypes module e.g.
 
+	```
 	import ctypes as ct
+	```
 
 * Access the C object code
 
+	```
     lib = ct.CDLL("path/libname.so")
+	```
 
 * Call functions per [Python Interface Code](#Python-Interface-Code)
   section below.
@@ -48,6 +52,7 @@ Basic concepts are outlined in the following.
 
 * Use #ifdefs to make header compatible with both C and C++, i.e.
 
+	```
 	#ifdef __cplusplus
     extern "C"
     {
@@ -58,6 +63,7 @@ Basic concepts are outlined in the following.
 	#ifdef __cplusplus
     } // extern "C"
 	#endif
+	```
 
 ### C/C++ Implementation Code
 
@@ -77,17 +83,23 @@ the C function interfaces.
 
 * Construct a python object that represents the shared library. E.g.,
 
+	```
     import ctypes as ct
     lib = ct.CDLL("path/libname.so")
+	```
 
 * Construct a python object for (each/any) function to be called. E.g.,
 
+	```
     pyfunc = lib.func
+	```
 
 * Call the python function and use the results as is normal from within python.
 
+	```
    	resval = pyfunc(args)
 	print("resval:", resval)
+	```
 
 #### Example with Custom Struct and Array
 
@@ -97,11 +109,15 @@ the C function interfaces.
 
 	* Specify the return type using the c_... types provided by ctype. E.g.,
 
-    	pyfunc.restype = ct.c_double  # or whatever type (use 'None' for void)
+		```
+		pyfunc.restype = ct.c_double  # or whatever type (use 'None' for void)
+		```
 
 	* Specify the agument types as a python list. E.g.,
 
-    	pyfunc.argtypes = [ct.POINTER(ct.c_float), ct.c_size_t]
+		```
+		pyfunc.argtypes = [ct.POINTER(ct.c_float), ct.c_size_t]
+		```
 
 
 * Ref ./test/test_pycallc.py
