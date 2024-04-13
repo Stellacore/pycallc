@@ -30,7 +30,7 @@ set(mainProgsCXX
 
 set(pyProgs
 
-	test_hello.py  # Python version
+	test_pycallc.py  # Python version
 
 	)
 

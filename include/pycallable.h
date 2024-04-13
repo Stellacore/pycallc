@@ -30,9 +30,15 @@ struct CCustomType
 	int anInt;
 	double anDouble;
 	size_t anSize;
-	float * anPtrToFloat;
 	short anArrayOf5Short[5];
 };
+
+//! Add corresponding elements of each arg (one by ref, one by value)
+bool
+copy
+	( struct CCustomType * const ptInto
+	, struct CCustomType const from
+	);
 
 
 

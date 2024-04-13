@@ -84,6 +84,13 @@ the C function interfaces.
 
     pyfunc = lib.func
 
+* Call the python function and use the results as is normal from within python.
+
+   	resval = pyfunc(args)
+	print("resval:", resval)
+
+#### Example with Custom Struct and Array
+
 * Use the python function object to specify the C-style stack frame
   layout for the (each) particular function. In particular
   (cf. callsum.py, sum.c for this specific example).
@@ -95,6 +102,9 @@ the C function interfaces.
 	* Specify the agument types as a python list. E.g.,
 
     	pyfunc.argtypes = [ct.POINTER(ct.c_float), ct.c_size_t]
+
+
+* Ref ./test/test_pycallc.py
 
 * Note there are
   [many ctypes](https://docs.python.org/3/library/ctypes.html#fundamental-data-types). These may be used individualy as illustrated above to describe
@@ -108,20 +118,24 @@ the C function interfaces.
 		# must match CCustomType declaration below
 		class CtCustomType(ct.Structure):
 			_fields_ = [
-				  ("anInt", ct.c_int)
-				, ("anDouble", ct.c_double)
-				, ("anSize", ct.c_size_t)
-				, ("anPtrToFloat", ct.POINTER(ct.c_float))
-				, ("anArrayOf5Short", ct.short * 5)
-				]
+			  ("anInt", ct.c_int)
+			, ("anDouble", ct.c_double)
+			, ("anSize", ct.c_size_t)
+			, ("anArrayOf5Short", ct.c_short * 5)
+			]
 
 		# to specify this as return type
-		pyfunc.restype = CtCustomType
-		pyfunc.argtypes = ...
+		pycopy = lib.copy
+		pycopy.restype = ct.c_bool
+		pycopy.argtypes = [ct.POINTER(CtCustomType), CtCustomType]
 
-		# to use from function call
-		result = pyfunc(...)
-		print(result.anInt, result.anDouble, result.anSize)  # etc...
+		# python data objects (using ctypes classes)
+		sdata = (ct.c_short * 5)(1, 2, 3, 4, 5)
+		source = CtCustomType(1, 1., 1, sdata)
+		copy = CtCustomType()
+
+		# invoke c function from python
+		okay = pycopy(ct.byref(copy), source)
 
 	* In C or within extern "C"{} header section
 
@@ -131,18 +145,14 @@ the C function interfaces.
 			int anInt;
 			double anDouble;
 			size_t anSize;
-			float * anPtrToFloat;
 			short anArrayOf5Short[5];
-		}
+		};
 
 		// Declare the custom return type
-		struct CCustomType
-		cfunc
-			(...)
-
-* Call the python function and use the results as is normal from within python.
-
-    resval = pyfunc(args)
-	print("resval:", resval)
+		bool
+		copy
+			( struct CCustomType * const ptInto
+			, struct CCustomType const from
+			);
 
 

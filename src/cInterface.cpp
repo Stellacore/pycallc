@@ -26,8 +26,30 @@ multiply
 	double result{ std::numeric_limits<double>::quiet_NaN() };
 	if (ptFloat)
 	{
-		result = static_cast<double>(*ptFloat) * static_cast<double>(*ptFloat);
+		result = static_cast<double>(*ptFloat) * static_cast<double>(anInt);
 	}
 	return result;
+}
+
+// NOTE: Has C-interface
+bool
+copy
+	( struct CCustomType * const ptInto
+	, struct CCustomType const from
+	)
+{
+	bool okay{ false };
+	if (ptInto)
+	{
+		ptInto->anInt = from.anInt;
+		ptInto->anDouble = from.anDouble;
+		ptInto->anSize = from.anSize;
+		for (size_t nn{0u} ; nn < 5u ; ++nn)
+		{
+			ptInto->anArrayOf5Short[nn] = from.anArrayOf5Short[nn];
+		}
+		okay = true;
+	}
+	return okay;
 }
 
